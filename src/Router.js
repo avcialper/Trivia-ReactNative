@@ -1,4 +1,5 @@
 import React from 'react'
+import colors from './utils/colors'
 
 // navigator
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -8,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import SignUp from './screens/auth/SignUpScreen'
 import SignIn from './screens/auth/SignInScreen'
 import Home from './screens/HomeScreen'
+import Settings from './screens/SettingsScreen'
 import Exam from './screens/ExamScreen'
 import Result from './screens/ResultScreen'
 
@@ -26,10 +28,11 @@ const AuthStack = () => {
 
 export default () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={{ colors: { background: colors.background } }} >
       <Stack.Navigator screenOptions={{ headerShown: false }} >
         <Stack.Screen name='Auth' component={AuthStack} />
         <Stack.Screen name='Home' component={Home} />
+        <Stack.Screen name='Settings' component={Settings} />
         <Stack.Screen name='Exam' component={Exam} />
         <Stack.Screen name='Result' component={Result} />
       </Stack.Navigator>

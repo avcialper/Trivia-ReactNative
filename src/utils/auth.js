@@ -1,8 +1,10 @@
 import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 import { errorMessage } from './authErrors'
 import { showMessage } from 'react-native-flash-message'
 import colors from './colors'
 import { Keyboard } from 'react-native'
+import useStore from '../useStore'
 
 export const signIn = (values, setUser) => {
     const { email, password } = values
@@ -15,7 +17,7 @@ export const signIn = (values, setUser) => {
                 backgroundColor: colors.main,
                 color: 'white'
             })
-            setUser(data.user)
+            setUser(data?.user)
         })
         .catch((error) => showMessage({
             message: errorMessage(error.code),
@@ -25,7 +27,7 @@ export const signIn = (values, setUser) => {
         }))
 }
 
-export const signUp = (values, setUser) => {
+export const signUp = (values, setUser, navigation) => {
     const { email, password } = values
     auth()
         .createUserWithEmailAndPassword(email, password)
@@ -36,7 +38,8 @@ export const signUp = (values, setUser) => {
                 backgroundColor: colors.main,
                 color: 'white'
             })
-            setUser(data.user)
+            setUser(data?.user)
+            navigation.navigate("Settings")
         })
         .catch((error) => showMessage({
             message: errorMessage(error.code),
@@ -64,4 +67,30 @@ export const signOut = (setUser) => {
             backgroundColor: colors.main,
             color: 'white'
         }))
+}
+
+export const createUserData = (uid, data, navigation) => {
+    firestore()
+        .collection('users')
+        .doc(uid)
+        .set(data)
+        .then((data) => {
+            console.log(data)
+            navigation.navigate("Home")
+        })
+        .catch((error) => console.log(error))
+}
+
+export const updateUsernameAndImage = (username, imageURL, navigation, fetchUser) => {
+    auth()
+        .currentUser
+        .updateProfile({
+            displayName: username,
+            photoURL: imageURL
+        })
+        .then((data) => {
+            fetchUser()
+            navigation.navigate("Home")
+        })
+        .catch((error) => console.log(error))
 }

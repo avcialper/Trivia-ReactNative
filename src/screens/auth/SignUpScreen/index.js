@@ -28,7 +28,7 @@ export default ({ navigation }) => {
                     password: "",
                     passwordConfirm: ""
                 }}
-                onSubmit={(values) => signUp(values, setUser)}
+                onSubmit={(values) => signUp(values, setUser, navigation)}
                 validationSchema={signUpValidations}
             >
                 {({ values, errors, touched, handleChange, handleSubmit }) => (

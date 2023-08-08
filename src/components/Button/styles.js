@@ -6,12 +6,12 @@ export default StyleSheet.create({
         backgroundColor: colors.main,
         padding: 8,
         marginHorizontal: 24,
-        borderRadius: 8
+        borderRadius: 8,
     },
     title: {
         color: 'white',
         fontSize: 24,
-        fontWeight: '900',
+        fontWeight: '500',
         textAlign: 'center'
     }
 })

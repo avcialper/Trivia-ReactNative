@@ -29,7 +29,7 @@ export default ({ navigation }) => {
         fetchUser()
     }, [])
 
-    if (user) navigation.reset({
+    if (user !== null) navigation.reset({
         index: 0,
         routes: [{name: "Home"}]
     })
