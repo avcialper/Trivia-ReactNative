@@ -9,13 +9,18 @@ import useStore from '../../useStore'
 export default ({ navigation }) => {
 
     const user = useStore((state) => state.user)
-
+    
     return (
         <View style={styles.container} >
             <Image source={require("../../assets/triviaRemovedBG.png")} style={styles.image} />
             <View style={styles.userContainer} >
-                <Image source={user.photoURL ? {uri: user.photoURL} : require("../../assets/user.jpg")} style={styles.userImage} />
-                <Text style={styles.username} >{user.displayName}</Text>
+                <Image
+                    source={user && user.photoURL ?
+                        { uri: user.photoURL } :
+                        require("../../assets/user.jpg")}
+                    style={styles.userImage}
+                />
+                <Text style={styles.username} >{user ? user.displayName : ""}</Text>
             </View>
             <View style={styles.bottomContainer} >
                 <Pressable style={styles.button} >

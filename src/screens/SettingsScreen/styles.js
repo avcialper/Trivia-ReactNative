@@ -31,29 +31,13 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
     },
-    imageButton: {
-        backgroundColor: colors.main,
-        padding: 8,
-        margin: 16,
-        borderRadius: 24
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    button: {
-        width: '45%',
-        padding: 16,
-        backgroundColor: colors.main,
-        borderWidth: 1,
-        borderBottomWidth: 0,
-        borderColor: 'white'
-    },
-    buttonTitle: {
+    email: {
+        fontSize: 24,
+        fontWeight: '500',
+        color: colors.main,
+        marginBottom: 8,
         textAlign: 'center',
-        fontSize: 16,
-        fontWeight: '700',
-        color: 'white'
+        marginTop: -5
     },
     updateContainer: {
         borderWidth: 2,
@@ -74,29 +58,15 @@ export default StyleSheet.create({
         borderTopLeftRadius: 14,
         borderTopRightRadius: 14
     },
-    modalContainer: {
-        width: '100%',
-        height: '15%',
-        padding: 16,
-        borderRadius: 16,
-        backgroundColor: colors.background
-    },
-    modalText: {
-        fontSize: 16,
-        color: 'black',
-        fontWeight: '500',
-        marginBottom: 16
-    },
-    answerArea: {
-        flexDirection: 'row',
-        justifyContent: 'space-around'
-    },
-    answerText: {
-        textAlign: 'center',
-        width: '40%',
-        padding: 4,
-        fontSize: 16,
-        fontWeight: '700',
-        color: colors.main
+    logOut: {
+        position: 'absolute',
+        right: 16,
+        top: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '10%',
+        height: '5%',
+        borderRadius: 8,
+        backgroundColor: colors.main
     }
 })

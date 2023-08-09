@@ -53,4 +53,11 @@ const updateEmailValidations = yup.object().shape({
         .required("Password is required.")
 })
 
-export { signUpValidations, signInValidations, updatePasswordValidations, updateEmailValidations }
+const emailValidations = yup.object().shape({
+    email: yup
+        .string()
+        .email("Please enter valid email.")
+        .required("Email addres is required.")
+})
+
+export { signUpValidations, signInValidations, updatePasswordValidations, updateEmailValidations, emailValidations }

@@ -2,6 +2,7 @@ import React from 'react'
 import { TextInput, View, Text } from 'react-native'
 import styles from './styles'
 
+// package
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default ({

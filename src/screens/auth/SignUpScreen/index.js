@@ -2,40 +2,42 @@ import React from 'react'
 import { View, Text, Image } from 'react-native'
 import styles from './styles'
 
+// package
+import { Formik } from 'formik'
+
 // components
 import Input from '../../../components/Input'
 import Button from '../../../components/Button'
 
-// validation
+// utils
 import { signUpValidations } from '../../../utils/validations'
-
-// auth function
 import { signUp } from '../../../utils/auth'
 
 import useStore from '../../../useStore'
-import { Formik } from 'formik'
 
 export default ({ navigation }) => {
 
     const setUser = useStore((state) => state.setUser)
 
+    const initialValues = {
+        email: "",
+        password: "",
+        passwordConfirm: ""
+    }
+
     return (
         <View style={styles.container}>
             <Image source={require("../../../assets/triviaRemovedBG.png")} style={styles.image} />
             <Formik
-                initialValues={{
-                    email: "",
-                    password: "",
-                    passwordConfirm: ""
-                }}
-                onSubmit={(values) => signUp(values, setUser, navigation)}
+                initialValues={initialValues}
+                onSubmit={(values, { resetForm }) => signUp(values, setUser, navigation, resetForm, initialValues)}
                 validationSchema={signUpValidations}
             >
                 {({ values, errors, touched, handleChange, handleSubmit }) => (
                     <>
                         <Input
                             placeholder={"Email"}
-                            primaryIcon={"account"}
+                            primaryIcon={"email"}
                             text={values.email}
                             setText={handleChange("email")}
                             keyboardType='email-address'

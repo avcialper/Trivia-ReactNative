@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, Image, LogBox } from 'react-native'
 import styles from './styles'
+
+// packages
+import { Formik } from 'formik'
+import Modal from 'react-native-modal'
 
 // components
 import Input from '../../../components/Input'
 import Button from '../../../components/Button'
+import Loading from '../../../components/Loading'
 
-// validation
-import { signInValidations } from '../../../utils/validations'
-
-// auth function
-import { signIn } from '../../../utils/auth'
+// utils
+import { emailValidations, signInValidations } from '../../../utils/validations'
+import { forgetPassword, signIn } from '../../../utils/auth'
 
 import useStore from '../../../useStore'
-import { Formik } from 'formik'
 
 // for navigation error
 LogBox.ignoreLogs(["Cannot update a component (`ForwardRef(BaseNavigationContainer)`) while rendering a different component (`Unknown`)"])
@@ -25,32 +27,44 @@ export default ({ navigation }) => {
     const fetchUser = useStore((state) => state.fetchUser)
     const setUser = useStore((state) => state.setUser)
 
+    const [resetModal, setResetModal] = useState(false)
+
     useEffect(() => {
         fetchUser()
-    }, [])
+    })
 
     if (user !== null) navigation.reset({
         index: 0,
-        routes: [{name: "Home"}]
+        routes: [{ name: "Home" }]
     })
-    
+
+    const initialValues = {
+        email: "",
+        password: ""
+    }
+
+    const initialEmail = {
+        email: ""
+    }
+
+    const closeResetModal = () => setResetModal(false)
+
+    if (loading) return <Loading />
+
     return (
-        <View style={[styles.container, loading && { justifyContent: 'center' }]} >
+        <View style={styles.container} >
             <Image source={require('../../../assets/triviaRemovedBG.png')} style={styles.image} />
             {!loading && <>
                 <Formik
-                    initialValues={{
-                        email: "",
-                        password: ""
-                    }}
-                    onSubmit={(values) => signIn(values, setUser)}
+                    initialValues={initialValues}
+                    onSubmit={(values, { resetForm }) => signIn(values, setUser, resetForm, initialValues)}
                     validationSchema={signInValidations}
                 >
                     {({ values, handleChange, handleSubmit, errors, touched }) => (
                         <>
                             <Input
-                                placeholder={'E-mail'}
-                                primaryIcon={'account'}
+                                placeholder={'Email'}
+                                primaryIcon={'email'}
                                 text={values.email}
                                 setText={handleChange("email")}
                                 keyboardType='email-address'
@@ -72,8 +86,43 @@ export default ({ navigation }) => {
                 </Formik>
                 <View style={styles.signUpContainer} >
                     <Text style={styles.signUpText} >Don't have an account?</Text>
-                    <Text style={[styles.signUpText, { color: '#1B7CD6' }]} onPress={() => navigation.navigate('SignUp')}> Sign Up</Text>
+                    <Text
+                        style={[styles.signUpText, { color: '#1B7CD6' }]}
+                        onPress={() => navigation.navigate('SignUp')}
+                    > Sign Up</Text>
                 </View>
+                <Text onPress={() => setResetModal(true)} style={styles.forgotText} >Forget password?</Text>
+                <Modal
+                    isVisible={resetModal}
+                    animationInTiming={800}
+                    animationOutTiming={800}
+                    swipeDirection={'down'}
+                    onSwipeComplete={() => closeResetModal()}
+                    onBackButtonPress={() => closeResetModal()}
+                    onBackdropPress={() => closeResetModal()}
+                    style={styles.modal}
+                >
+                    <View style={styles.modalContainer} >
+                        <Formik
+                            initialValues={initialEmail}
+                            validationSchema={emailValidations}
+                            onSubmit={(values, { resetForm }) => forgetPassword(values.email, resetForm, initialEmail, closeResetModal)}
+                        >{({ values, errors, touched, handleChange, handleSubmit }) => (
+                            <>
+                                <Input
+                                    placeholder={"Email"}
+                                    primaryIcon={"email"}
+                                    text={values.email}
+                                    setText={handleChange("email")}
+                                    errorMessage={errors.email && touched.email ? errors.email : ""}
+                                    keyboardType='email-address'
+                                />
+                                <Button title={"Send Mail"} onPress={(values) => handleSubmit(values)} />
+                            </>
+                        )}
+                        </Formik>
+                    </View>
+                </Modal>
             </>}
         </View>
     )

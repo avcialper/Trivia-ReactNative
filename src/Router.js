@@ -29,12 +29,12 @@ const AuthStack = () => {
 export default () => {
   return (
     <NavigationContainer theme={{ colors: { background: colors.background } }} >
-      <Stack.Navigator screenOptions={{ headerShown: false }} >
-        <Stack.Screen name='Auth' component={AuthStack} />
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Auth' >
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='Settings' component={Settings} />
         <Stack.Screen name='Exam' component={Exam} />
         <Stack.Screen name='Result' component={Result} />
+        <Stack.Screen name='Auth' component={AuthStack} />
       </Stack.Navigator>
       <FlashMessage position={"top"} />
     </NavigationContainer>
