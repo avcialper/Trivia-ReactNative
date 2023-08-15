@@ -53,48 +53,54 @@ export const signOut = (setUser, navigation) => {
         )
 }
 
-export const createUserData = (uid, data, navigation, changeLoading) => {
-    changeLoading(true)
-    firestore()
-        .collection('users')
-        .doc(uid)
-        .set(data)
-        .then(() => navigation.navigate("Home"))
-        .catch((error) => console.log(error))
-        .finally(() => changeLoading(false))
-}
+export const updateUsernameAndImage = async (displayName, username, currentImageURL, imageURL, uid, usersData, fetchUser, changeLoading, navigation) => {
+    const isRegister = usersData.filter((user) => user.username == displayName)
+    const filteredUsersData = usersData.filter((user) => user.username != displayName)
+    var data
 
-export const updateUsernameAndImage = async (username, imageURL, curretImageURL, navigation, fetchUser, uid, changeLoading) => {
     try {
-        if (imageURL !== curretImageURL && imageURL !== null) {
+        let photoURL = null;
+
+        if (imageURL !== currentImageURL && imageURL !== null) {
             const ref = storage().ref(uid)
-
             await ref.putFile(imageURL)
-            const url = await ref.getDownloadURL()
-
-            await auth().currentUser.updateProfile({
-                displayName: username,
-                photoURL: url
-            })
-        } else if (imageURL === null)
-            await auth()
-                .currentUser
-                .updateProfile({
-                    displayName: username,
-                    photoURL: null
-                })
-        else {
-            await auth()
-                .currentUser
-                .updateProfile({
-                    displayName: username,
-                    photoURL: curretImageURL
-                })
+            photoURL = await ref.getDownloadURL()
+        } else if (imageURL === null) {
+            photoURL = null
+        } else {
+            photoURL = currentImageURL
         }
+
+        await auth().currentUser.updateProfile({
+            displayName: username,
+            photoURL: photoURL
+        })
+
+        if (isRegister.length != 0) {
+            data = [...filteredUsersData, {
+                username: username,
+                imageURL: photoURL,
+                point: isRegister[0].point
+            }]
+        } else {
+            data = [...usersData, {
+                username: username,
+                imageURL: photoURL,
+                point: 0
+            }]
+        }
+
+        await firestore()
+            .collection("Users")
+            .doc("usersData")
+            .update({
+                dataset: data
+            })
+
         await fetchUser()
         navigation.navigate("Home")
     } catch (error) {
-        console.log(error)
+        console.error(error)
     } finally {
         changeLoading(false)
     }

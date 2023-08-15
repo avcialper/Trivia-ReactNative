@@ -23,14 +23,16 @@ LogBox.ignoreLogs(["Cannot update a component (`ForwardRef(BaseNavigationContain
 export default ({ navigation }) => {
 
     const user = useStore((state) => state.user)
+    const setUser = useStore((state) => state.setUser)
     const loading = useStore((state) => state.loading)
     const fetchUser = useStore((state) => state.fetchUser)
-    const setUser = useStore((state) => state.setUser)
+    const fetchUsersData = useStore((state) => state.fetchUsersData)
 
     const [resetModal, setResetModal] = useState(false)
 
     useEffect(() => {
         fetchUser()
+        fetchUsersData()
     })
 
     if (user !== null) navigation.reset({

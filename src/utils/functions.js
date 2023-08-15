@@ -1,5 +1,5 @@
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
-import { createUserData, updateUsernameAndImage } from "./auth"
+import {  updateUsernameAndImage } from "./auth"
 import { showMessage } from 'react-native-flash-message'
 import colors from "./colors"
 
@@ -36,7 +36,10 @@ export const takeImageFromLibrary = async (currentUser, setCurrentUser) => {
     }
 }
 
-export const handleSave = (currentUser, setError, navigation, user, setUserData, fetchUser, changeLoading) => {
+export const handleSave = (displayName, currentUser, setError, navigation, user, fetchUser, changeLoading, usersData) => {
+
+    const usernameIsRegister = usersData.filter((item) => item.username == currentUser.name && item.username != displayName)
+
     if (currentUser.name === "") {
         setError("Please enter a username.")
         return
@@ -44,13 +47,10 @@ export const handleSave = (currentUser, setError, navigation, user, setUserData,
     else if (currentUser.name.length > 16) {
         setError("Username must be less than 16 characters.")
         return
+    } else if (usernameIsRegister.length != 0) {
+        setError("Usernmae already exists.")
+        return
     }
-    const data = {
-        username: currentUser.name,
-        imageURL: currentUser.imageURL,
-        point: 0
-    }
-    setUserData(data)
-    createUserData(user.uid, data, navigation, changeLoading)
-    updateUsernameAndImage(currentUser.name, currentUser.imageURL, user.photoURL, navigation, fetchUser, user.uid, changeLoading)
+
+    updateUsernameAndImage(displayName, currentUser.name, user.photoURL, currentUser.imageURL, user.uid, usersData, fetchUser, changeLoading, navigation)
 }

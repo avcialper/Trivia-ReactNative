@@ -24,15 +24,16 @@ export default ({ navigation }) => {
 
     const user = useStore((state) => state.user)
     const setUser = useStore((state) => state.setUser)
-    const setUserData = useStore((state) => state.setUserData)
+    const usersData = useStore((state) => state.usersData)
     const fetchUser = useStore((state) => state.fetchUser)
+    const loading = useStore((state) => state.loading)
+    const setLoading = useStore((state) => state.setLoading)
 
     const [camera, setCamera] = useState(false)
     const [currentUser, setCurrentUser] = useState({ name: "", imageURL: null })
     const [usernameError, setUsernameError] = useState("")
     const [deleteModal, setDeleteModal] = useState(false)
     const [logOut, setLogOut] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
 
     const initialPasswordValues = {
         password: "",
@@ -62,9 +63,9 @@ export default ({ navigation }) => {
         }
     }
 
-    const changeLoading = (bool) => setIsLoading(bool)
+    const changeLoading = (bool) => setLoading(bool)
 
-    if (isLoading) return <Loading />
+    if (loading) return <Loading />
 
     return (
         <View style={styles.container} >
@@ -193,7 +194,7 @@ export default ({ navigation }) => {
                     </View>
                     <Button
                         title={"Save"}
-                        onPress={() => handleSave(currentUser, setUsernameError, navigation, user, setUserData, fetchUser, changeLoading)}
+                        onPress={() => handleSave(user.displayName, currentUser, setUsernameError, navigation, user, fetchUser, changeLoading, usersData)}
                     />
                 </ScrollView>
             </View>

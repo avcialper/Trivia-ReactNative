@@ -10,6 +10,7 @@ import SignUp from './screens/auth/SignUpScreen'
 import SignIn from './screens/auth/SignInScreen'
 import Home from './screens/HomeScreen'
 import Settings from './screens/SettingsScreen'
+import Leaderboard from './screens/LeaderboardScreen'
 import Exam from './screens/ExamScreen'
 import Result from './screens/ResultScreen'
 
@@ -32,6 +33,7 @@ export default () => {
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Auth' >
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='Settings' component={Settings} />
+        <Stack.Screen name='Leaderboard' component={Leaderboard} />
         <Stack.Screen name='Exam' component={Exam} />
         <Stack.Screen name='Result' component={Result} />
         <Stack.Screen name='Auth' component={AuthStack} />

@@ -26,7 +26,7 @@ export default ({ navigation }) => {
                 <Pressable style={styles.button} >
                     <Text style={styles.buttonTitle} >Start Challange</Text>
                 </Pressable>
-                <Pressable style={styles.button} >
+                <Pressable style={styles.button} onPress={() => navigation.navigate("Leaderboard")} >
                     <Text style={styles.buttonTitle} >Leaderboard</Text>
                 </Pressable>
             </View>
