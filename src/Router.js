@@ -11,6 +11,7 @@ import SignIn from './screens/auth/SignInScreen'
 import Home from './screens/HomeScreen'
 import Settings from './screens/SettingsScreen'
 import Leaderboard from './screens/LeaderboardScreen'
+import TestSettings from './screens/TestSettingsScreen'
 import Exam from './screens/ExamScreen'
 import Result from './screens/ResultScreen'
 
@@ -34,6 +35,7 @@ export default () => {
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='Settings' component={Settings} />
         <Stack.Screen name='Leaderboard' component={Leaderboard} />
+        <Stack.Screen name='TestSettings' component={TestSettings} />
         <Stack.Screen name='Exam' component={Exam} />
         <Stack.Screen name='Result' component={Result} />
         <Stack.Screen name='Auth' component={AuthStack} />

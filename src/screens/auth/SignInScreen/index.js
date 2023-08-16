@@ -35,10 +35,18 @@ export default ({ navigation }) => {
         fetchUsersData()
     })
 
-    if (user !== null) navigation.reset({
-        index: 0,
-        routes: [{ name: "Home" }]
-    })
+    if (user !== null) {
+        if (user.displayName)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "Home" }]
+            })
+        else
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "Settings" }]
+            })
+    }
 
     const initialValues = {
         email: "",

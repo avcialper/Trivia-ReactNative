@@ -98,7 +98,10 @@ export const updateUsernameAndImage = async (displayName, username, currentImage
             })
 
         await fetchUser()
-        navigation.navigate("Home")
+        navigation.reset({
+            index: 0,
+            routes: [{ name: "Home" }]
+        })
     } catch (error) {
         console.error(error)
     } finally {

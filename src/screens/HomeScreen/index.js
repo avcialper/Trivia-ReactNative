@@ -23,7 +23,7 @@ export default ({ navigation }) => {
                 <Text style={styles.username} >{user ? user.displayName : ""}</Text>
             </View>
             <View style={styles.bottomContainer} >
-                <Pressable style={styles.button} >
+                <Pressable style={styles.button} onPress={() => navigation.navigate("TestSettings")}>
                     <Text style={styles.buttonTitle} >Start Challange</Text>
                 </Pressable>
                 <Pressable style={styles.button} onPress={() => navigation.navigate("Leaderboard")} >

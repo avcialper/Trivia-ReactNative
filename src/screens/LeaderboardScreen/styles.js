@@ -11,7 +11,7 @@ export default StyleSheet.create({
         resizeMode: 'contain'
     },
     innerContainer: {
-        marginHorizontal: 16,
+        marginHorizontal: 24,
         borderWidth: 2,
         borderColor: colors.main,
         borderRadius: 16,
