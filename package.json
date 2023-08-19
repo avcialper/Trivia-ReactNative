@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.9.13",
     "axios": "^1.4.0",
     "formik": "^2.4.3",
+    "html-entities": "^2.4.0",
     "lottie-react-native": "^5.1.6",
     "react": "18.1.0",
     "react-native": "0.70.13",

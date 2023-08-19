@@ -1,7 +1,8 @@
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
-import {  updateUsernameAndImage } from "./auth"
+import { updateUsernameAndImage } from "./auth"
 import { showMessage } from 'react-native-flash-message'
 import colors from "./colors"
+import firestore from '@react-native-firebase/firestore'
 
 export const message = (message) => {
     showMessage({
@@ -53,4 +54,77 @@ export const handleSave = (displayName, currentUser, setError, navigation, user,
     }
 
     updateUsernameAndImage(displayName, currentUser.name, user.photoURL, currentUser.imageURL, user.uid, usersData, fetchUser, changeLoading, navigation)
+}
+
+export const timerFun = (
+    timer,
+    alertModal,
+    setTimer,
+    clearSelected,
+    setShowAnswer,
+    setClearSelected,
+    questions,
+    questionIndex,
+    selectedAnswer,
+    setPoint,
+    setQuestionIndex,
+    setDisabled,
+    setIsTrue,
+    setSelectedAnswer,
+    navigation,
+    interval,
+    point,
+    usersData,
+    username
+) => {
+    if (timer > 0) {
+        if (!alertModal)
+            setTimer(prev => prev - 1)
+    }
+    else {
+        clearInterval(interval)
+        if (clearSelected) {
+            setShowAnswer(() => true)
+            setTimer(3)
+            setClearSelected(() => false)
+            const isCorrect = questions[questionIndex].correct_answer === selectedAnswer
+            setIsTrue(isCorrect)
+
+            if (isCorrect) {
+                const difficult = questions[questionIndex].difficult
+                if (difficult === "easy")
+                    setPoint((prev) => prev + 5)
+                else if (difficult === "medium")
+                    setPoint((prev) => prev + 7)
+                else
+                    setPoint((prev) => prev + 10)
+            }
+
+        }
+        else if (questionIndex < questions.length - 1) {
+            setQuestionIndex(prev => prev + 1)
+            setTimer(12)
+            setShowAnswer(() => false)
+            setDisabled(() => false)
+            setIsTrue(() => false)
+            setSelectedAnswer(() => "")
+            setClearSelected(() => true)
+        } else {
+            const data = usersData.map((item) => {
+                if (item.username === username)
+                    return { ...item, point: item.point + point }
+                return item
+            })
+            firestore()
+                .collection("Users")
+                .doc("usersData")
+                .update({
+                    dataset: data
+                })
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "Result", params: { point: point } }]
+            })
+        }
+    }
 }

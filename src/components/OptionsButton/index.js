@@ -9,7 +9,7 @@ export default ({ text, onPress, isTrue = false, isFalse = false, isSelected = f
                 styles.container,
                 isTrue && { borderColor: 'green' },
                 isFalse && { borderColor: 'red' },
-                isSelected && { borderColor: 'black' }
+                isSelected && { borderColor: '#a1751f' }
             ]}
             onPress={() => onPress()}
             disabled={disabled}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Image, Pressable } from 'react-native'
+import { View, Image } from 'react-native'
 import styles from './styles'
 
 // packages
@@ -51,14 +51,17 @@ export default ({ navigation }) => {
                 mode='dropdown'
                 onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
                 style={styles.picker}
+                dropdownIconColor={'black'}
             >
-                <Picker.Item label='Any' value={""} />
+                <Picker.Item label='Any' value={""} color='black' style={{ backgroundColor: 'whitesmoke' }} />
                 {
                     categories.map(item => (
                         <Picker.Item
                             label={item.category}
                             value={item.id}
                             key={item.id}
+                            color='black'
+                            style={{ backgroundColor: 'whitesmoke' }}
                         />
                     ))
                 }

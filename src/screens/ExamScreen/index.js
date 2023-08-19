@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, BackHandler } from 'react-native'
 import styles from './styles'
 
 // components
 import OptionsButton from '../../components/OptionsButton'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AlertModal from '../../components/AlertModal'
+
+// packages
+import { decode } from 'html-entities'
 
 import useStore from '../../useStore'
+import { timerFun } from '../../utils/functions'
 
 export default ({ navigation }) => {
 
-    /*
-        YAPILACAKLAR
-        - Sınav esnasında geri gitme işlemine alert ekle
-        - Sınav sonucunu sisteme kaydet
-        - Yönlendirme işlemlerini düzenle
-    */
-
     const questions = useStore((state) => state.questions)
+    const usersData = useStore((state) => state.usersData)
+    const user = useStore((state) => state.user)
 
     const [currentQuestion, setCurrentQuestion] = useState("")
     const [questionIndex, setQuestionIndex] = useState(0)
@@ -29,51 +28,32 @@ export default ({ navigation }) => {
     const [isTrue, setIsTrue] = useState(false)
     const [clearSelected, setClearSelected] = useState(true)
     const [point, setPoint] = useState(0)
+    const [alertModal, setAlertModal] = useState(false)
 
     useEffect(() => {
-
-        const interval = setInterval(() => {
-            if (timer > 0)
-                setTimer(prev => prev - 1)
-            else {
-                clearInterval(interval)
-                if (clearSelected) {
-                    setShowAnswer(() => true)
-                    setTimer(3)
-                    setClearSelected(() => false)
-                    const isCorrect = questions[questionIndex].correct_answer === selectedAnswer
-                    setIsTrue(isCorrect)
-
-                    if (isCorrect) {
-                        const difficult = questions[questionIndex].difficult
-                        if (difficult === "easy")
-                            setPoint((prev) => prev + 5)
-                        else if (difficult === "medium")
-                            setPoint((prev) => prev + 7)
-                        else
-                            setPoint((prev) => prev + 10)
-                    }
-
-                }
-                else if (questionIndex < questions.length - 1) {
-                    setQuestionIndex(prev => prev + 1)
-                    setTimer(12)
-                    setShowAnswer(() => false)
-                    setDisabled(() => false)
-                    setIsTrue(() => false)
-                    setSelectedAnswer(() => "")
-                    setClearSelected(() => true)
-                } else {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: "Result" }]
-                    })
-                }
-            }
-        }, 1000)
+        const interval = setInterval(() => timerFun(
+            timer,
+            alertModal,
+            setTimer,
+            clearSelected,
+            setShowAnswer,
+            setClearSelected,
+            questions,
+            questionIndex,
+            selectedAnswer,
+            setPoint,
+            setQuestionIndex,
+            setDisabled,
+            setIsTrue,
+            setSelectedAnswer,
+            navigation,
+            interval,
+            point,
+            usersData,
+            user.displayName
+        ), 1000)
         return () => clearInterval(interval)
-
-    }, [timer])
+    }, [timer, alertModal])
 
     useEffect(() => {
 
@@ -83,9 +63,23 @@ export default ({ navigation }) => {
         ].sort(() => Math.random() - 0.5) : ["True", "False"]
 
         setAnswers(suffledAnswers)
-        setCurrentQuestion(questions[questionIndex].question)
+        setCurrentQuestion(decode(questions[questionIndex].question))
 
     }, [questionIndex])
+
+    useEffect(() => {
+        const backAction = () => {
+            setAlertModal(true)
+            return true
+        }
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+        )
+
+        return () => backHandler.remove()
+    }, [])
 
     return (
         <View style={styles.container} >
@@ -95,12 +89,12 @@ export default ({ navigation }) => {
                 <Text style={styles.questionText} >{questionIndex + 1}- {currentQuestion}</Text>
             </View>
             <View style={styles.point} >
-                <Icon name='shield-crown' size={36} color={'#a1751f'} />
+                <Image source={require('../../assets/crown.png')} />
                 <Text style={styles.countText} >{point}</Text>
             </View>
             <View style={styles.timer} >
                 <Text style={styles.countText} >{timer}</Text>
-                <Icon name='timer-sand-full' size={36} color={'#a1751f'} />
+                <Image source={require('../../assets/timer.png')} />
             </View>
             {
                 answers.length != 2 ?
@@ -148,6 +142,21 @@ export default ({ navigation }) => {
                         />
                     </>)
             }
+            <AlertModal
+                visible={alertModal}
+                close={() => setAlertModal(false)}
+                message={"Are you sure you want to exit the challenge?"}
+                firstChoice={"Yes"}
+                onFirstPress={() => {
+                    setAlertModal(false)
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Home" }]
+                    })
+                }}
+                secondChoice={"No"}
+                onSecondPress={() => setAlertModal(false)}
+            />
         </View>
     )
 }

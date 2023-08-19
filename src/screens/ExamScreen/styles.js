@@ -8,7 +8,7 @@ export default StyleSheet.create({
     image: {
         width: '100%',
         height: '40%',
-        resizeMode: 'contain'
+        resizeMode: 'cover'
     },
     question: {
         backgroundColor: colors.main,
@@ -50,6 +50,7 @@ export default StyleSheet.create({
     countText: {
         fontSize: 36,
         color: colors.main,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginLeft: 4
     }
 })
